@@ -1,0 +1,55 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-dockerfile
+{
+    "name": "ED-DEV",
+    "runArgs": ["--name", "ED-DEV"],
+    "image": "ed:cuda11.7",
+    // "build": {
+    //     // Sets the run context to one level up instead of the .devcontainer folder.
+    //     "context": "..",
+    //     // Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
+    //     "dockerfile": "../dockerfile"
+    // },
+
+    // copy additinal files from outer the workspace of vs
+    "mounts": [
+        // copy ssh config file. no include keys
+        "source=${localEnv:HOME}/.ssh/config,target=/etc/ssh/ssh_config,type=bind,consistency=cached"
+    ],
+
+    // Features to add to the dev container. More info: https://containers.dev/features.
+    // "features": {},
+    "customizations": {
+        // Configure properties specific to VS Code.
+        "vscode": {
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+                "adam-bender.commit-message-editor",
+                "mhutchie.git-graph",
+                "ms-python.python",
+                "njpwerner.autodocstring",
+                "ms-python.black-formatter",
+                "ms-python.isort",
+                "ms-toolsai.jupyter"
+            ]
+        }
+    },
+
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    // "forwardPorts": [],
+    // patch for git trust
+    "onCreateCommand": {
+        "git": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+        "pip": "pip install black isort snakeviz notebook",
+        "path": "echo PATH=$PATH:~/.local/bin >> ~/.bashrc"
+    }
+
+    // Uncomment the next line to run commands after the container is created.
+    // "postCreateCommand": ""
+
+    // Configure tool-specific properties.
+    // "customizations": {},
+
+    // Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
+    // "remoteUser": "devcontainer"
+}
